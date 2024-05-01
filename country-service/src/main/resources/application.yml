@@ -1,0 +1,111 @@
+spring:
+  application:
+    name: country-service
+  jackson:
+    serialization:
+      indent-output: true
+
+
+management:
+  health:
+    circuitbreakers: # see details on http://localhost:8080/actuator/health
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      show-details: always
+
+server:
+  port: 8080
+
+
+external:
+  api:
+    url: https://650973acf6553137159b7907.mockapi.io/api/v1/country
+
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      getAllCountryService: # name of the circuit breaker
+        register-health-indicator: true # to register health indicator
+        failureRateThreshold: 50  # failure rate threshold for circuit breaker
+        minimumNumberOfCalls: 5   # minimum number of calls to trigger circuit breaker
+        automaticTransitionFromOpenToHalfOpenEnabled: true # enable automatic transition from open to half open state when time limit is reached
+        waitDurationInOpenState: 5s # after 5 seconds in open state the circuit breaker will be half open
+        permittedNumberOfCallsInHalfOpenState: 3
+        sliding-window-size: 10
+        sliding-window-type: COUNT_BASED  # COUNT_BASED or TIME_BASED
+#        ignore-exceptions: # to ignore specific exceptions from circuit breaker
+#          - feign.FeignException.Conflict
+#          - java.io.IOException
+        ignore-exception-predicate:
+          - # ignore all exceptions
+
+    configs:
+      default:
+        register-health-indicator: true # to register health indicator
+        failureRateThreshold: 50  # failure rate threshold for circuit breaker
+        minimumNumberOfCalls: 3  # minimum number of calls to trigger circuit breaker
+        automaticTransitionFromOpenToHalfOpenEnabled: true # enable automatic transition from open to half open state when time limit is reached
+        waitDurationInOpenState: 5000 # after 5 seconds in open state the circuit breaker will be half open
+        permittedNumberOfCallsInHalfOpenState: 3
+        sliding-window-size: 10
+        sliding-window-type: COUNT_BASED
+  # Retry: Enables retrying if a service does not respond.
+
+  retry:
+    configs:
+      default:
+        maxAttempts: 3
+        waitDuration: 1s
+        # wait-duration * (exponential-backoff-multiplier ^ (retry iteration count))
+    instances:
+      createCountryService:
+        maxAttempts: 3 # maximum number of attempts
+        waitDuration: 5000ms
+  #        exponential-backoff-multiplier: 2 # doubles the wait time after each attempt.
+
+  # TimeLimiter: Ensures that an operation completes within a specific time period. Otherwise, it times out and is handled appropriately.
+
+  timelimiter:
+    configs:
+      values:
+        timeout-duration: 4s # Specifies the maximum duration of the operation. In this case, the operation must complete within 4 seconds.
+    instances:
+      getCountryTimeLimiter: # Unique name for TimeLimiter
+        base-config: values
+        cancel-running-future: true # If the operation cannot be completed within the specified time, it cancels the operation.
+
+  # RateLimiter: Limits the number of requests within a specified time period.
+
+  ratelimiter:
+    instances:
+      rateLimiter:
+        limitForPeriod: 5
+        limitRefreshPeriod: 10s
+        timeoutDuration: 0
+        registerHealthIndicator: true
+        eventConsumerBufferSize: 100
+  #        limitForPeriod: 2 # Specifies the number of allowed calls within a certain period (per second).
+  #        limitRefreshPeriod: 300ms # Specifies how often the limit is refreshed.
+  #        timeoutDuration: 10ms # Specifies the timeout duration. If the operation cannot be completed within the timeoutDuration,
+  #        #                     it usually times out and the request is considered invalid.
+  #        event-consumer-buffer-size: 100
+
+
+  # Bulkhead: Limits the number of requests for a service, and prevents other components from being affected
+  # if a service fails.
+
+  # Used to limit concurrent requests when using Semaphore.
+  # When used with FixedThreadPool, each operation runs with a single thread.
+
+  bulkhead:
+    instances:
+      getCountryBulkhead:
+        max-concurrent-calls: 5 # Specifies how many calls the relevant service can handle concurrently. The default value is 25.
+        max-wait-duration: 5s # Specifies how many ms to wait before throwing an exception for a call to a full bulkhead.
+        # The default value is 0 ms.

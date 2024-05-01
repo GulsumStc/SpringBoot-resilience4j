@@ -1,0 +1,21 @@
+
+p
+java:S11724"(Remove this unused method parameter "e".(’å¨«ùÿÿÿÿ8ˆæßšó1J$8aed7a5e-6d4c-4e39-91e7-b194b061626a
+m	java:S106O"+Replace this use of System.out by a logger.(¡şı¹8„æßšó1J$f62cab8e-d4bd-42b3-9037-77839ae31798
+¡
+java:S2142R"^Either re-interrupt this method or rethrow the "InterruptedException" that can be caught here.(ä ¹€8…æßšó1J$4f79feb0-fbcc-4f60-8be0-c45987f2c2fb
+p
+java:S1172Z"(Remove this unused method parameter "e".(²ıÄâıÿÿÿÿ8‹æßšó1J$21f77cf2-cecc-4ba3-a682-d3e46fa0d052
+m	java:S106l"+Replace this use of System.out by a logger.(ñ­ù¾8Šæßšó1J$ddbbdc14-2112-42a9-8093-98a6f1193077
+p
+java:S1172p"(Remove this unused method parameter "e".(ÌêİÏüÿÿÿÿ8ª¹’›ó1J$853db3d0-535a-49a9-a079-83de19366fee
+’
+java:S1128"JRemove this unused import 'io.github.resilience4j.retry.annotation.Retry'.(Ä³ß¾úÿÿÿÿ8©æßšó1J$cd7b9e82-fead-4ca7-bd7d-dc027390b5b5
+|
+java:S1128"4Remove this unused import 'java.time.LocalDateTime'.(æÃ§ƒüÿÿÿÿ8ªæßšó1J$2f67fc0e-2f10-4487-9b04-ffdd3ad6d1bb
+s
+java:S1128"+Remove this unused import 'java.util.List'.(Õë±Äøÿÿÿÿ8Ü»Æ›ó1J$6be1680b-6aaa-40e7-b5ed-c578b8d23dc1
+o
+java:S1068"'Remove this unused "log" private field.(¡Ë§ˆúÿÿÿÿ8«æßšó1J$14f45eac-270b-4e98-8c95-4e844ed64630
+n
+java:S1068",Remove this unused "attempts" private field.(éÅÎ)8«æßšó1J$069eb56b-4c8a-4b2a-ac5d-69f6c7aef00f
